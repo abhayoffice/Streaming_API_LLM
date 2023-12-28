@@ -1,12 +1,14 @@
+import asyncio
 import os
 import logging
 from datetime import timedelta
 
-from fastapi import FastAPI , HTTPException, status, Depends
+from fastapi import FastAPI, HTTPException, status, Depends, Query
 from fastapi.security import OAuth2PasswordRequestForm
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from starlette.middleware.cors import CORSMiddleware
 from langchain.document_loaders import DirectoryLoader
+from starlette.responses import StreamingResponse
 
 from src.db.faiss_db import create_faiss_db
 from src.models import llmModel
@@ -94,6 +96,16 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 @app.get("/users/me/", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
+
+@app.post("/chat")
+async def chat(query: Query, response: StreamingResponse):
+async def stream():
+ async for token in callback_handler:
+ yield token
+streaming_iterator = stream()
+task = asyncio.create_task(agent(query, streaming_iterator))
+return StreamingResponse(streaming_iterator)
+
 
 ####################################################################
 @app.post('/query')
