@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e7ab25f1-3e15-4521-8ec6-510e0e1114a3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/faiss/index.faiss" beforeDir="false" afterPath="$PROJECT_DIR$/faiss/index.faiss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/faiss/index.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/faiss/index.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/callbackHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/callbackHandler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/faiss_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/faiss_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

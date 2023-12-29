@@ -9,7 +9,6 @@ from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from starlette.middleware.cors import CORSMiddleware
 from langchain.document_loaders import DirectoryLoader
 from starlette.responses import StreamingResponse
-
 from src.db.faiss_db import create_faiss_db
 from src.models import llmModel
 from src.security.auth import Token, authenticate_user, db, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, User, \
@@ -97,34 +96,42 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
-@app.post("/chat")
-async def chat(query: Query, response: StreamingResponse):
-async def stream():
- async for token in callback_handler:
- yield token
-streaming_iterator = stream()
-task = asyncio.create_task(agent(query, streaming_iterator))
-return StreamingResponse(streaming_iterator)
+# @app.post("/chat")
+# async def chat(query: Query, response: StreamingResponse):
+#     async def stream():
+#         async for token in callback_handler:
+#             yield token
+#
+#     streaming_iterator = stream()
+#     task = asyncio.create_task(agent(query, streaming_iterator))
+#     return StreamingResponse(streaming_iterator)
 
 
 ####################################################################
 @app.post('/query')
-async def get_query(query_str : str):
-    responses = dict(chain(query_str))
-    source_list = []
-    for source_item in responses['source_documents']:
+async def get_query(query_str: str, current_user: User = Depends(get_current_active_user)):
+    responses = chain(query_str)
 
-        source = source_item.metadata['source']
-        file_name = os.path.basename(source)
-        if file_name not in source_list:
-            source_list.append(file_name)
+    async def generate():
+        # Process your response and yield chunks for streaming
+        # For example, assuming `response` is a string
+        for chunk in responses.get('result'):
+            yield chunk.encode("utf-8")
+            print(chunk)
 
-    print("Source list ", source_list)
-    print(responses.keys())
-    output = {'response': responses.get('result'), 'Source documents': source_list}
-    return output
+    return StreamingResponse(content=generate(), media_type="application/octet-stream")
+    # output = {'response': responses.get('result')}
+    # return output
+
+#############################################
+# @app.post('/query')
+# async def get_query(query_str: str):
+#     responses = dict(chain(query_str))
+#     output = {'response': responses.get('result')}
+#     return output
 
 #Run the application from ehre.
+
 if __name__ == "__main__":
     import uvicorn
 

@@ -4,7 +4,7 @@ from langchain.vectorstores import FAISS
 import os
 
 def create_faiss_db(documents, embeddings):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=500)
     docs = text_splitter.split_documents(documents)
 
     # embeddings = HuggingFaceBgeEmbeddings(
